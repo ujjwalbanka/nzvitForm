@@ -1,6 +1,51 @@
 .main {
     height: 100vh;
 }
+.form-html h2 {
+    font-weight: bold;
+    font-size: 36px;
+}
+.form-html input {
+    border: 2px solid #dae1dd;
+    border-radius: 50px;
+    height: 40px;
+    transition: border 0.2s ease 0s;
+    width: 100%;
+    box-sizing: border-box;
+    color: #333;
+    font-size: 15px;
+    background: transparent;
+    padding: 0px 20px;
+    margin: 0 0 10px;
+}
+.form-html  button.action-buttons {
+    background: transparent none repeat scroll 0 0;
+    border: 2px solid #dae1dd;
+    border-radius: 30px;
+    color: #333;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 0 15px;
+    padding: 8px 18px;
+    text-align: center;
+    transition: all 0.5s ease 0s;
+}
+.form-html  button.action-buttons:hover {
+    border: 2px solid #ff6800;
+}
+.form-html  input:focus {
+    outline: 0;
+    border: 2px solid #ff6800;
+}
+.image_picker_selector .thumbnail img{
+    width: 64px;
+}
+.image_picker_selector .thumbnail.selected img{
+    border:2px solid #f00;
+}
+ul.thumbnails.image_picker_selector li {
+    display: inline-block;
+}
 .flex-container {
     padding: 0;
     margin: 0;
@@ -16,18 +61,10 @@
 #regForm {
     background-color: #ffffff;
     margin: 100px auto;
-    padding: 40px;
     width: 70%;
     min-width: 300px;
 }
-input {
-    padding: 10px;
-    width: 100%;
-    font-size: 17px;
-    font-family: Raleway;
-    border: 1px solid #aaaaaa;
-}
-input.invalid {
+.form-html input.invalid {
     background-color: #ffdddd;
 }
 /* .tab {
@@ -52,3 +89,21 @@ input.invalid {
 .error{
     color: red;
 }
+label.radio-option {
+    display: inline-block;
+    position: relative;
+    padding-right: 10px;
+}
+label.radio-option > input{ /* HIDE RADIO */
+    visibility: hidden; /* Makes input not-clickable */
+    position: absolute; /* Remove input from document flow */
+  }
+  label.radio-option > input + img{ /* IMAGE STYLES */
+    cursor:pointer;
+    border:2px solid transparent;
+    width: 64px;
+    display: block;
+  }
+  label.radio-option > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
+    border:2px solid #f00;
+  }
