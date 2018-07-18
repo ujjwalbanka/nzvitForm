@@ -1,3 +1,8 @@
+function toTitleCase(s) {
+    var result = s.replace( /([A-Z])/g, " $1" );
+    var finalResult = result.charAt(0).toUpperCase() + result.slice(1); 
+    return finalResult;
+}
 function calculate_age(d) { 
     var dob = new Date(d);
     var diff_ms = Date.now() - dob.getTime();
@@ -100,15 +105,15 @@ function createPayload(data) {
     payload.goalBones = {
         osteoarthritis: data.osteoporosisOsteoarthritis ? _.includes(data.osteoporosisOsteoarthritis, 'osteoarthritis') : false,
         osteoporosis: data.osteoporosisOsteoarthritis ? _.includes(data.osteoporosisOsteoarthritis, 'osteoporosis') : false,
-        tendonitis: data.tendonitis ? data.tendonitis === 'yes' : false,
-        arthritis: data.arthritis ? data.arthritis === 'yes' : false
+        tendonitis: data.tendonitis ? data.tendonitis.toLowerCase() === 'yes' : false,
+        arthritis: data.arthritis ? data.arthritis.toLowerCase() === 'yes' : false
     };
 
     /**
      * Brain
      */
     payload.goalBrain = {
-        shortTermMemoryLoass: data.shortTermMemoryLoss ? data.shortTermMemoryLoss === 'yes' : false,
+        shortTermMemoryLoass: data.shortTermMemoryLoss ? data.shortTermMemoryLoss.toLowerCase() === 'yes' : false,
         troubleMultiFocusing: data.troubleMultiTaskingFocusing ? _.includes(data.troubleMultiTaskingFocusing, 'focusing') : false,
         troubleMultiTasking: data.troubleMultiTaskingFocusing ? _.includes(data.troubleMultiTaskingFocusing, 'multitasking') : false,
     };
@@ -118,25 +123,25 @@ function createPayload(data) {
      */
     payload.goalDigestive = {
         acidReflux: data.digestiveConcerns ? _.includes(data.digestiveConcerns, 'acidReflux') : false,
-        heartBurn: data.digestiveConcerns ? _.includes(data.digestiveConcerns, 'Heartburn') : false,
-        indigestion: data.digestiveConcerns ? _.includes(data.digestiveConcerns, 'Indigestion') : false,
+        heartBurn: data.digestiveConcerns ? _.includes(data.digestiveConcerns, 'heartburn') : false,
+        indigestion: data.digestiveConcerns ? _.includes(data.digestiveConcerns, 'indigestion') : false,
     };
 
     /**
      * Energy
      */
     payload.goalEnergy = {
-        burnedOutFeeling: data.burnedOutFeeling ? data.burnedOutFeeling === 'yes' : false,
-        sleepingTrouble: data.sleepingTrouble ? data.sleepingTrouble === 'yes' : false,
+        burnedOutFeeling: data.burnedOutFeeling ? data.burnedOutFeeling.toLowerCase() === 'yes' : false,
+        sleepingTrouble: data.sleepingTrouble ? data.sleepingTrouble.toLowerCase() === 'yes' : false,
     };
 
     /**
      * Heart
      */
     payload.goalHeart = {
-        familyHistory: data.familyHistory ? data.familyHistory === 'yes' : false,
-        highBP: data.highBPhighCalestrol ? _.includes(data.highBPhighCalestrol, 'High Blood Pressure') : false,
-        highCholesterol: data.highBPhighCalestrol ? _.includes(data.highBPhighCalestrol, 'High cholesterol') : false
+        familyHistory: data.familyHistory ? data.familyHistory.toLowerCase() === 'yes' : false,
+        highBP: data.highBPhighCalestrol ? _.includes(data.highBPhighCalestrol, 'highBloodPressure') : false,
+        highCholesterol: data.highBPhighCalestrol ? _.includes(data.highBPhighCalestrol, 'highCholesterol') : false
     };
 
     /**
@@ -152,14 +157,14 @@ function createPayload(data) {
     payload.goalSkin = {
         aeging: data.skinConcerns ? _.includes(data.skinConcerns, 'generalAging') : false,
         drySkin: data.skinConcerns ? _.includes(data.skinConcerns, 'drySkin') : false,
-        wrinkles: data.skinConcerns ? _.includes(data.skinConcerns, 'Wrinkles') : false
+        wrinkles: data.skinConcerns ? _.includes(data.skinConcerns, 'wrinkles') : false
     };
 
     /**
      * Stress
      */
     payload.goalStress = {
-        stressfulLife: data.stressConcerns ? data.stressConcerns === 'yes' : false,
+        stressfulLife: data.stressConcerns ? data.stressConcerns.toLowerCase() === 'yes' : false,
     };
 
     /**
@@ -167,14 +172,14 @@ function createPayload(data) {
      */
     payload.lifestyle = {
         allergies: data.allergies ? data.allergies.map((val) => {return val.toLowerCase();}) : [],
-        computerScreen: data.computerScreen ? data.computerScreen === 'yes' : false,
+        computerScreen: data.computerScreen ? data.computerScreen.toLowerCase() === 'yes' : false,
         dairyPerWeek: data.dairyPerWeek ? getQuant(data.dairyPerWeek) : 'low',
         drinkPerWeek: data.drinkPerWeek ? getQuant(data.drinkPerWeek) : 'low',
         dryEyes: data.dryEyes ? data.dryEyes === 'sometimes' || data.dryEyes === 'often' : false,
         exercisePerWeek: data.exercisePerWeek ? getQuant(data.exercisePerWeek) : 'low',
         fishPerWeek: data.fishPerWeek ? getQuant(data.fishPerWeek) : 'low',
         meatPerWeek: data.meatPerWeek ? getQuant(data.meatPerWeek) : 'low',
-        smoke: data.smoke ? data.smoke === 'yes' : false,
+        smoke: data.smoke ? data.smoke.toLowerCase() === 'yes' : false,
         soreMusclesPostExercise: false,
         specialDiets: data.specialDiets ? data.specialDiets.map((val) => {return val.toLowerCase();}) : []
     };
@@ -183,24 +188,46 @@ function createPayload(data) {
      * Personal Info
      */
     payload.personalInfo = {
-        age: data.age ? calculate_age(data.age) : 1,        
+        age: data.age ? data.age : 1,
         height: data.height ? data.height : 1,
         name: data.name ? data.name : '',
         email: data.email ? data.email : '',
-        sex: data.gender ? data.gender.toLowerCase() : 'male',        
+        sex: data.gender ? data.gender.toLowerCase() : 'male',
         weight: data.weight ? data.weight : 1,
+        pregStatus: data.current_status ? data.current_status.toLowerCase() : 'none',
     };
 
     /**
      * Primary Goal
      */
     payload.primaryGoal = data.primaryGoal ? data.primaryGoal : null;
-
-    return payload;
+    console.log('final output', payload);
+    return JSON.stringify(payload);
 
 }
-jQuery(document).ready(function() {
-
+export const assessmentInit = function() {
+    jQuery(document).on('keypress','.form-html', function(e) {
+        // var tag = e.target.tagName.toLowerCase();
+        if ( event.key === "Enter") 
+            jQuery("#nextBtn").click();
+    });
+    jQuery(document).on('submit','#regForm',function(event){
+        event.preventDefault();
+        jQuery("#nextBtn").click();
+    });
+    jQuery('body').on('change', '.form-html input[type="checkbox"]', function() {
+        jQuery(".form-html input[type='checkbox']:checked").each(function (){
+            if (jQuery(this).val() === 'none') {
+                jQuery(".form-html input[type='checkbox']:checked").each(function (){
+                    if (jQuery(this).val() !== 'none') {
+                        jQuery(this).prop("checked", false);
+                    }
+                });
+            }
+            // jQuery(this).prop("checked", false);
+        });
+    });
+    
     window.addProduct = (product) => {
         return new Promise((resolve, reject) => {
             const {
@@ -223,13 +250,14 @@ jQuery(document).ready(function() {
 
 
     window.add_product = function (product_id, quantity) {
-      jQuery.post("/?wc-ajax=add_to_cart",
-     {product_id: product_id,
-               quantity: quantity},
-     function(data, status){
-         console.log("Data: " + data + "\nStatus: " + status);
-     });
-   }
+        jQuery.post("/?wc-ajax=add_to_cart",
+        {product_id: product_id,
+                quantity: quantity},
+        function(data, status){
+            console.log("Data: " + data + "\nStatus: " + status);
+        });
+    }
+
      var currentTab = 0;
      var finalOutput = {};
      var userFlow = [];
@@ -245,9 +273,9 @@ jQuery(document).ready(function() {
          },{
              label: 'Email',
              inputType: 'email',
-             nextConfig: 2,
+             nextConfig: 3,
              previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Enter email',
+             placeholder: 'Enter email...',
              inputName : 'email',
              inputGroup : 'personalInfo'
          },{
@@ -259,15 +287,15 @@ jQuery(document).ready(function() {
              inputName : 'password',
              inputGroup : 'personalInfo'
          },{
-             label: 'Date of birth',
-             inputType: 'date',
+             label: 'Age',
+             inputType: 'number',
              nextConfig: 4,
              previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Enter DOB',
+             placeholder: 'Enter Age...',
              inputName : 'dob',
              inputGroup : 'personalInfo'
          },{
-             label: 'Height in cm',
+             label: 'Height (cm)',
              inputType: 'number',
              nextConfig: 5,
              previousConfig: function (){ return userFlow.pop()},
@@ -275,22 +303,22 @@ jQuery(document).ready(function() {
              inputName : 'height',
              inputGroup : 'personalInfo'
          },{
-             label: 'Weight in kg',
+             label: 'Weight (kg)',
              inputType: 'number',
              nextConfig: 6,
              previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Enter weight',
+             placeholder: 'Enter weight...',
              inputName : 'weight',
              inputGroup : 'personalInfo'
          },
          {
              label: 'Gender',
              inputType: 'radio',
-             radioConfig: ['Male', 'Female'],
+             showImage: true,
+             imageConfig: ["icons/male.svg", "icons/female.svg"],
+             radioConfig: ['male', 'female'],
              nextConfig: function (value) {
-                 console.log(value);
-                 console.log(value['gender']);
-                 if (value['gender'] == 'Male') return 7;
+                 if (value['gender'] == 'male') return 7;
                  else return 8;
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -300,16 +328,18 @@ jQuery(document).ready(function() {
          },{
              label: 'Any Allergies',
              inputType: 'select',
-             selectConfig: ['Nuts', 'Peanuts', 'Soy', 'Dairy', 'Fish', 'Shelfish', 'Eggs'],
+             selectConfig: ['nuts', 'peanuts', 'soy', 'dairy', 'fish', 'shelfish', 'eggs'],
              nextConfig: 9,
+             showImage: true,
+             imageConfig: ["icons/nuts.svg", "icons/peanut.svg", "icons/soybean.svg", "icons/dairy.svg", "icons/fish.svg", "icons/shellfish.svg", "icons/eggs.svg"],
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Enter weight',
              inputName : 'allergies',
              inputGroup : 'lifestyle'
          },{
-             label: 'Current Status',
+             label: 'Are you',
              inputType: 'radio',
-             radioConfig: ['Pregnant', 'Planning', 'Breastfeeding'],
+             radioConfig: ['pregnant', 'planning', 'breastfeeding','none'],
              nextConfig: 7,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Enter current status',
@@ -318,15 +348,29 @@ jQuery(document).ready(function() {
          },{
              label: 'Any special diet',
              inputType: 'select',
-             selectConfig: ['Vegan', 'Vegetarian', 'Gluten Free'],
+             selectConfig: ['vegan', 'vegetarian', 'glutenFree'],
              nextConfig: function (value) {
-                 if (value['specialDiets'] && value['specialDiets'].indexOf('Vegan') > -1 ) {
-                     if(value['allergies'].indexOf('Dairy') > -1) return 13;
+                 if (value['specialDiets'] && value['specialDiets'].indexOf('vegan') > -1 ) {
+                     if(value['allergies'].indexOf('dairy') > -1) {
+                        var height = value['height'];
+                        var weight = value['weight'];
+                        var bmi = weight / (height*height);
+                        if (value['gender'].indexOf('male') > -1 && bmi > 25) return 14
+                        if (value['gender'].indexOf('female') > -1 && bmi > 18.5) return 14
+                        return 13;
+                     }
                      else return 12;
                  }
-                 else if (value['allergies'].indexOf('fish') > -1 ){
-                     if(value['specialDiets'] && value['SpecialDiets'].indexOf('Vegetarian') > -1 ) {
-                         if(value['allergies'].indexOf('Dairy') > -1) return 13;
+                 else if (value['allergies'].indexOf('Fish') > -1 ){
+                     if(value['specialDiets'] && value['SpecialDiets'].indexOf('vegetarian') > -1 ) {
+                         if(value['allergies'].indexOf('dairy') > -1) {
+                            var height = value['height'];
+                            var weight = value['weight'];
+                            var bmi = weight / (height*height);
+                            if (value['gender'].indexOf('male') > -1 && bmi > 25) return 14
+                            if (value['gender'].indexOf('female') > -1 && bmi > 18.5) return 14
+                            return 13
+                         }
                          else return 12;
                      }
                      else return 11;
@@ -342,8 +386,15 @@ jQuery(document).ready(function() {
              inputType: 'radio',
              radioConfig: ['rarely', '1-2', '3+'],
              nextConfig: function (value) {
-                 if(value['specialDiets'].indexOf('Vegetarian') > -1 ) {
-                     if(value['allergies'].indexOf('Dairy') > -1) return 13;
+                 if(value['specialDiets'].indexOf('vegetarian') > -1 ) {
+                     if(value['allergies'].indexOf('dairy') > -1) {
+                        var height = value['height'];
+                        var weight = value['weight'];
+                        var bmi = weight / (height*height);
+                        if (value['gender'].indexOf('male') > -1 && bmi > 25) return 14
+                        if (value['gender'].indexOf('female') > -1 && bmi > 18.5) return 14
+                        return 13
+                     }
                      else return 12;
                  }
                  else return 11
@@ -357,7 +408,14 @@ jQuery(document).ready(function() {
              inputType: 'radio',
              radioConfig: ['rarely', '1-2', '3+'],
              nextConfig: function (value) {
-                 if(value['allergies'].indexOf('Dairy') > -1) return 13;
+                 if(value['allergies'].indexOf('dairy') > -1) {
+                    var height = value['height'];
+                    var weight = value['weight'];
+                    var bmi = weight / (height*height);
+                    if (value['gender'].indexOf('male') > -1 && bmi > 25) return 14
+                    if (value['gender'].indexOf('female') > -1 && bmi > 18.5) return 14
+                    return 13;
+                 }
                  else return 12;
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -368,7 +426,14 @@ jQuery(document).ready(function() {
              label: 'Avg dairy per week',
              inputType: 'radio',
              radioConfig: ['rarely', '1-2', '3+'],
-             nextConfig: 13,
+             nextConfig: function(value) {
+                 var height = value['height'];
+                 var weight = value['weight'];
+                 var bmi = weight / (height*height);
+                 if (value['gender'].indexOf('male') > -1 && bmi > 25) return 14
+                 if (value['gender'].indexOf('female') > -1 && bmi > 18.5) return 14
+                 return 13
+             },
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Enter avg dairy per week',
              inputName : 'dairyPerWeek',
@@ -398,7 +463,7 @@ jQuery(document).ready(function() {
              nextConfig: 16,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Enter avg exercise per week',
-             inputName : 'drinkPerWeek',
+             inputName : 'drinkPerWeek',    
              inputGroup : 'lifestyle'
          },{
              label: 'Do you smoke?',
@@ -415,30 +480,39 @@ jQuery(document).ready(function() {
              radioConfig: ['yes', 'no'],
              nextConfig: function (value) {
                  if(value['computerScreen'] && value['computerScreen'].indexOf('yes') > -1) return 18;
-                 else return 19},
+                 if(value['current_status'] && value['current_status'] !== 'none') return 'submit';
+                 return 19
+            },
              previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Do you smoke?',
+             placeholder: 'Do you spend more than 3 hrs on computer screen?',
              inputName : 'computerScreen',
              inputGroup : 'lifestyle'
          },{
              label: 'Eyes fell dry, red or inflamed ?',
              inputType: 'radio',
              radioConfig: ['rarely', 'sometimes','often'],
-             nextConfig: 19,
+             nextConfig: function(value){
+                if(value['current_status'] && value['current_status'] !== 'none') return 'submit';
+                else return 19;
+             },
              previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Do you smoke?',
+             placeholder: 'Eyes fell dry, red or inflamed ?',
              inputName : 'dryEyes',
              inputGroup : 'lifestyle'
          },{
              label: 'Do you have any specific Goals',
              inputType: 'select',
-             selectConfig: ['energy', 'brain','Heart','Immunity','stress','bone','digestion','skin'],
+             selectConfig: ['energy', 'brain','heart','immunity','stress','bone','digestion','skin'],
+             showImage: true,
+             imageConfig: ["icons/energy.svg", "icons/brain.svg", "icons/heart.svg", "icons/immunity.svg", "icons/stress.svg", "icons/bone.svg", "icons/stomach.svg", "icons/skin.svg"],
              nextConfig: 20,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Do you have any specific Goals',
              inputName : 'goals',
              inputGroup : null
-         },{
+         },
+        //  20
+         {
              label: 'Please select your Primary Goal',
              inputType: 'radio',
              radioConfig: function () {
@@ -447,23 +521,23 @@ jQuery(document).ready(function() {
              nextConfig: function (value) {
                  if(value['goals'].indexOf('energy') > -1 ) return 21
                  if(value['goals'].indexOf('brain') > -1 ) return 23
-                 if(value['goals'].indexOf('Heart') > -1 ) return 25
-                 if(value['goals'].indexOf('Immunity') > -1 ) return 30
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('bone') > -1 ) return 27
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
+                 if(value['goals'].indexOf('heart') > -1 ) return 25
+                 if(value['goals'].indexOf('immunity') > -1 ) return 27
+                 if(value['goals'].indexOf('stress') > -1 ) return 28
+                 if(value['goals'].indexOf('bone') > -1 ) return 29
+                 if(value['goals'].indexOf('digestion') > -1 ) return 32
+                 if(value['goals'].indexOf('skin') > -1 ) return 33
              },
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Please select your Primary Goal',
              inputName : 'primaryGoal',
              inputGroup : null
          },
-         // energy
+         //21  energy
          {
              label: 'Any trouble sleeping at night ?',
              inputType: 'radio',
-             radioConfig: ['true','false'],
+             radioConfig: ['yes','no'],
              nextConfig: 22,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Any trouble sleeping at night ?',
@@ -472,15 +546,15 @@ jQuery(document).ready(function() {
          },{
              label: 'Do you feel burned out or fatigued ?',
              inputType: 'radio',
-             radioConfig: ['true','false'],
+             radioConfig: ['yes','no'],
              nextConfig: function (value) {
-                 if(value['goals'].indexOf('brain') > -1 ) return 23
-                 if(value['goals'].indexOf('Heart') > -1 ) return 25
-                 if(value['goals'].indexOf('Immunity') > -1 ) return 30
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('bone') > -1 ) return 27
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
+                if(value['goals'].indexOf('brain') > -1 ) return 23
+                if(value['goals'].indexOf('heart') > -1 ) return 25
+                if(value['goals'].indexOf('immunity') > -1 ) return 27
+                if(value['goals'].indexOf('stress') > -1 ) return 28
+                if(value['goals'].indexOf('bone') > -1 ) return 29
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
                  return 'submit'
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -488,7 +562,7 @@ jQuery(document).ready(function() {
              inputName : 'burnedOutFeeling',
              inputGroup : 'goalEnergy'
          },
-         // brain
+         // 23 brain
          {
              label: 'Do you have trouble',
              inputType: 'select',
@@ -503,12 +577,12 @@ jQuery(document).ready(function() {
              inputType: 'radio',
              radioConfig: ['yes','no'],
              nextConfig: function (value) {
-                 if(value['goals'].indexOf('Heart') > -1 ) return 25
-                 if(value['goals'].indexOf('Immunity') > -1 ) return 30
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('bone') > -1 ) return 27
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
+                if(value['goals'].indexOf('heart') > -1 ) return 25
+                if(value['goals'].indexOf('immunity') > -1 ) return 27
+                if(value['goals'].indexOf('stress') > -1 ) return 28
+                if(value['goals'].indexOf('bone') > -1 ) return 29
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
                  return 'submit'
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -516,7 +590,7 @@ jQuery(document).ready(function() {
              inputName : 'shortTermMemoryLoss',
              inputGroup : 'goalBrain'
          },
-         // heart
+         // 25 heart
          {
              label: 'Family History of Heart problems',
              inputType: 'radio',
@@ -529,13 +603,13 @@ jQuery(document).ready(function() {
          },{
              label: 'Any concerns about ',
              inputType: 'select',
-             selectConfig: ['High Blood Pressure','High cholesterol', 'none'],
+             selectConfig: ['highBloodPressure','highCholesterol', 'none'],
              nextConfig: function (value) {
-                 if(value['goals'].indexOf('Immunity') > -1 ) return 30
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('bone') > -1 ) return 27
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
+                if(value['goals'].indexOf('immunity') > -1 ) return 27
+                if(value['goals'].indexOf('stress') > -1 ) return 28
+                if(value['goals'].indexOf('bone') > -1 ) return 29
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
                  return 'submit'
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -543,12 +617,44 @@ jQuery(document).ready(function() {
              inputName : 'highBPhighCalestrol',
              inputGroup : 'goalHeart'
          },
-         // bones
+         // 27 Immunity
+         {
+            label: 'How often do you experience colds or flu on average in a year',
+            inputType: 'number',
+            nextConfig: function (value) {
+                if(value['goals'].indexOf('stress') > -1 ) return 28
+                if(value['goals'].indexOf('bone') > -1 ) return 29
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
+                 return 'submit'
+            },
+            previousConfig: function (){ return userFlow.pop()},
+            placeholder: 'How often do you experience colds or flu on average in a year',
+            inputName : 'illFrequency',
+            inputGroup : 'goalImmunity'
+        },
+        // 28 stress
+        {
+            label: 'Do you have a stressful <br /> a)Job causing <br />b)Mood Swings <br />c) Burnout and fatigue?',
+            inputType: 'radio',
+            radioConfig: ['yes','no'],
+            nextConfig: function (value) {
+                if(value['goals'].indexOf('bone') > -1 ) return 29
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
+                 return 'submit'
+            },
+            previousConfig: function (){ return userFlow.pop()},
+            placeholder: 'Do you have a stressful',
+            inputName : 'stressConcerns',
+            inputGroup : 'goalStress'
+        },
+         //29 bones
          {
              label: 'Rheumatoid Arthritis',
              inputType: 'radio',
              radioConfig: ['yes','no'],
-             nextConfig: 28,
+             nextConfig: 30,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Rheumatoid Arthritis',
              inputName : 'arthritis',
@@ -557,7 +663,7 @@ jQuery(document).ready(function() {
              label: 'Tendonitis',
              inputType: 'radio',
              radioConfig: ['yes','no'],
-             nextConfig: 29,
+             nextConfig: 31,
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Tendonitis',
              inputName : 'tendonitis',
@@ -565,12 +671,10 @@ jQuery(document).ready(function() {
          },{
              label: 'Do you suffer from any of the following',
              inputType: 'select',
-             selectConfig: ['Osteoporosis?','Osteoarthritis?', 'none'],
+             selectConfig: ['osteoporosis','osteoarthritis', 'none'],
              nextConfig: function (value) {
-                 if(value['goals'].indexOf('Immunity') > -1 ) return 30
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
+                if(value['goals'].indexOf('digestion') > -1 ) return 32
+                if(value['goals'].indexOf('skin') > -1 ) return 33
                  return 'submit'
              },
              previousConfig: function (){ return userFlow.pop()},
@@ -578,61 +682,31 @@ jQuery(document).ready(function() {
              inputName : 'osteoporosisOsteoarthritis',
              inputGroup : 'goalBones'
          },
-         // Immunity
-         {
-             label: 'How often do you experience colds or flu on average in a year',
-             inputType: 'number',
-             nextConfig: function (value) {
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 if(value['goals'].indexOf('skin') > -1 ) return 31
-                 return 'submit'
-             },
-             previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'How often do you experience colds or flu on average in a year',
-             inputName : 'illFrequency',
-             inputGroup : 'goalImmunity'
-         },
-         // skin
+        // 32 Digestive Health
+        {
+            label: 'Has any of the following digestive issues been a concern for you?',
+            inputType: 'select',
+            selectConfig: ['heartburn','indigestion', 'acidReflux', 'none'],
+            nextConfig: function (value) {
+                if(value['goals'].indexOf('skin') > -1 ) return 33
+                return 'submit'
+            },
+            previousConfig: function (){ return userFlow.pop()},
+            placeholder: 'Has any of the following digestive issues been a concern for you?',
+            inputName : 'digestiveConcerns',
+            inputGroup : 'goalDigestive'
+        },
+         //33 skin
          {
              label: 'Do you have any skin concerns',
              inputType: 'select',
-             selectConfig: ['Wrinkles','drySkin','generalAging', 'none'],
-             nextConfig: function (value) {
-                 if(value['goals'].indexOf('stress') > -1 ) return 32
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 return 'submit'
-             },
+             selectConfig: ['wrinkles','drySkin','generalAging', 'none'],
+             nextConfig: 'submit',
              previousConfig: function (){ return userFlow.pop()},
              placeholder: 'Do you have any skin concerns',
              inputName : 'skinConcerns',
              inputGroup : 'goalSkin'
-         },
-         // stress
-         {
-             label: 'Do you have a stressful <br /> a)job causing <br />b)Mood Swings <br />c) burnout and fatigue?',
-             inputType: 'radio',
-             radioConfig: ['yes','no'],
-             nextConfig: function (value) {
-                 if(value['goals'].indexOf('digestion') > -1 ) return 33
-                 return 'submit'
-             },
-             previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Do you have a stressful',
-             inputName : 'stressConcerns',
-             inputGroup : 'goalStress'
-         },
-         // Digestive Health
-         {
-             label: 'Has any of the following digestive issues been a concern for you?',
-             inputType: 'select',
-             selectConfig: ['Heartburn','Indigestion', 'acidReflux', 'None'],
-             nextConfig: 'submit',
-             previousConfig: function (){ return userFlow.pop()},
-             placeholder: 'Has any of the following digestive issues been a concern for you?',
-             inputName : 'digestiveConcerns',
-             inputGroup : 'goalDigestive'
-         },
+         }
      ];
      makeForm(0);
      function checkIsFunction (functionName, action) {
@@ -650,6 +724,7 @@ jQuery(document).ready(function() {
              jQuery.ajax({
                  type: 'POST',
                  url: "http://nzvit.chipserver.ml/api/v2/vitamins",
+                 contentType: 'application/json',
                  data: createPayload(finalOutput),
                  success: function(resultData) {
                     Promise.all(resultData.products.map((product) => {
@@ -662,18 +737,16 @@ jQuery(document).ready(function() {
            });
          }
          if (action === 'previous') {
-             jQuery('.form-html').html('');
-             console.log(userFlow);
-             nextPos = checkIsFunction(formConfig[position].previousConfig, 'previous');
-             console.log(userFlow);
-             console.log('previous', nextPos);
-             makeForm(nextPos);
+            jQuery('.form-html').html('');
+            jQuery('.form-html .form-content').hide();
+            nextPos = checkIsFunction(formConfig[position].previousConfig, 'previous');
+            makeForm(nextPos);
          }
          if (action === 'next') {
              if (!validateForm(position)) return false;
              jQuery('.form-html').html('');
+             jQuery('.form-html .form-content').hide();
              userFlow.push(position);
-             console.log('dsdadsd',userFlow);
              nextPos = checkIsFunction(formConfig[position].nextConfig);
              makeForm(nextPos);
          }
@@ -684,49 +757,87 @@ jQuery(document).ready(function() {
              nextConfig = checkIsFunction(formConfig[position].nextConfig),
              previousConfig = formConfig[position].previousConfig,
              inputName = formConfig[position].inputName,
+             inputGroup = formConfig[position].inputGroup,
+             showImage = formConfig[position].showImage? formConfig[position].showImage : false,
              inputType = formConfig[position].inputType,
              radioConfig = formConfig[position].radioConfig ? checkIsFunction(formConfig[position].radioConfig) : null,
              selectConfig = formConfig[position].selectConfig ? checkIsFunction(formConfig[position].selectConfig) : null,
              htmlInput = '',
+             inputGroupImgUrl = 'icons/name.svg',
              submitbutton;
-         var previousButton = previousConfig != null ?
+             if(inputGroup == 'personalInfo') inputGroupImgUrl = 'icons/name.svg';
+             if(inputGroup == 'lifestyle') inputGroupImgUrl = 'icons/lifestyle.svg';
+             if(inputGroup == 'goals') inputGroupImgUrl = 'icons/goals.svg';
+            var previousButton = previousConfig != null ?
                              `<button type="button" id="prevBtn" class="action-buttons" onclick="nextPrev(${position}, 'previous')">Previous</button>`
                              : '';
-         var nextButton = `<button type="button" id="nextBtn" class="action-buttons next-button" onclick="nextPrev(${position}, 'next')">Next</button>`;
-          if (nextConfig === 'submit') {
-             nextButton = `<button type="button" id="nextBtn" class="action-buttons next-button" onclick="nextPrev(${position}, 'submit')">Submit</button>`;
-          }
-         if (inputType == 'radio') {
-             radioConfig.map((radioOption) => {
-                 htmlInput += `<label class='radio-option'>
-                                 <input name="${inputName}" type="${inputType}" value="${radioOption}" placeholder="${placeholder}" oninput="this.className = ''" ${finalOutput[inputName]? finalOutput[inputName].indexOf(radioOption)>-1? 'checked' : '':''}>${radioOption}
-                                 <img src="https://www.freeiconspng.com/uploads/male-icon-19.png">
-                               </label>`;
-             });
-         } else if (inputType == 'select'){
-             htmlInput = `<select name="${inputName}" class='image-picker show-html' multiple>
-                             ${selectConfig.map((selectOption) => {
-                                 return `<option data-img-src="https://www.freeiconspng.com/uploads/male-icon-19.png" value="${selectOption}" ${finalOutput[inputName]? finalOutput[inputName].indexOf(selectOption)>-1? 'selected' : '':''}>${selectOption}</option>`
-                             })}
-                         </select>`;
-         }else {
-             htmlInput = `<input name="${inputName}" type="${inputType}" placeholder="${placeholder}" oninput="this.className = ''" value="${finalOutput[inputName]? finalOutput[inputName] : ''}">`;
-         }
-         var dynamicHtml = `<div class="tab">
-                                 <h2>${labelText}</h2>
-                                 <p>${htmlInput}</p>
+            var nextButton = `<button type="button" id="nextBtn" class="action-buttons next-button" onclick="nextPrev(${position}, 'next')">Next</button>`;
+            if (nextConfig === 'submit') {
+                nextButton = `<button type="button" id="nextBtn" class="action-buttons next-button" onclick="nextPrev(${position}, 'submit')">Submit</button>`;
+            }
+            if (inputType == 'radio') {
+                if(showImage) htmlInput += `<div class='checkbox-image-multiple row'>`;
+                radioConfig.map((radioOption, index) => {
+                    if (showImage) {
+                        htmlInput += `<div class='col-md-3 col-xs-6 item-with-image'><label class="checkbox-container">
+                                        <input type="radio" name='${inputName}' value="${radioOption}" ${finalOutput[inputName]? finalOutput[inputName] ===radioOption ? 'checked' : '':''}>
+                                        <span class="checkmark" style="background-image:url(${formConfig[position].imageConfig[index]});">
+                                        </span>
+                                        <br>
+                                        <span id="category_title">${toTitleCase(radioOption)}
+                                        </span>
+                                    </label></div>`;
+                    } else {
+                        htmlInput += `<label class="checkbox-container">
+                                        <input name="${inputName}" type="${inputType}" value="${radioOption}" placeholder="${placeholder}"  ${finalOutput[inputName]? finalOutput[inputName] === radioOption ? 'checked' : '':''}>
+                                        <span class="checkmark"></span>${toTitleCase(radioOption)}
+                                    </label>`;
+                    }
+                }).join('');
+                if(showImage) htmlInput += `</div>`;
+            } else if (inputType == 'select'){
+                if (showImage) {
+                    htmlInput = `<div class='row checkbox-image-multiple item-with-image'>${selectConfig.map((selectOption, index) => {
+                                    return `<div class='col-md-3 col-xs-6'><label class="checkbox-container">
+                                        <input type="checkbox" value="${selectOption}" ${finalOutput[inputName]? finalOutput[inputName].indexOf(selectOption)>-1? 'checked' : '':''}>
+                                        <span class="checkmark" style="background-image:url(${formConfig[position].imageConfig[index]});">
+                                        </span>
+                                        <br>
+                                        <span id="category_title">${toTitleCase(selectOption)}
+                                        </span>
+                                    </label></div>`
+                                }).join('')}</div>`;
+                } else {
+                    htmlInput = `${selectConfig.map((selectOption) => {
+                                    return `<label class="checkbox-container multiple">
+                                                <input type="checkbox" value="${selectOption}" ${finalOutput[inputName]? finalOutput[inputName].indexOf(selectOption)>-1? 'checked' : '':''}>
+                                                <span class="checkmark"></span>${toTitleCase(selectOption)}
+                                            </label>`
+                                }).join('')}`;
+                }
+            }else {
+                htmlInput = `<input name="${inputName}" type="${inputType}" placeholder="${placeholder}"  value="${finalOutput[inputName]? finalOutput[inputName] : ''}">`;
+            }
+         var dynamicHtml = `<div class="col-md-12 tab no-padding-mobile">
+                                    <div class='circlar-image'>
+                                        <div style="background-image: url(${inputGroupImgUrl})"></div>
+                                    </div>
+                                    <div class='col-md-12 form-content no-padding-mobile'>
+                                        <h2>${labelText}</h2>
+                                        <div class='col-md-12'>${htmlInput}</div>
+                                        <div class='error validation-error'>&zwnj;</div>
+                                    </div>
                              </div>
-                             <div style="overflow:auto;">
-                                 <div>
+                             <div class='col-md-12'>
                                  ${previousButton}
                                  ${nextButton}
-                                 </div>
                              </div>`;
- 
-         jQuery('.form-html').append(dynamicHtml);
-         if (inputType == 'select') {
-             jQuery("select").imagepicker();
-         }
+        jQuery('.form-html').html(dynamicHtml);
+        jQuery('.form-html .form-content').hide();
+        jQuery('.form-html .form-content').show("slide", { direction: "right" }, 500);
+        //  if (inputType == 'select' && showImage) {
+        //      jQuery("select").imagepicker();
+        //  }
      }
  
      function validateForm(position) {
@@ -753,15 +864,20 @@ jQuery(document).ready(function() {
              inputResponse = jQuery(".form-html").find("input[type='radio']:checked").length>0 ? jQuery(".form-html").find("input[type='radio']:checked")[0].value : '';
              valid = inputResponse ? true : false;
          } else if (formConfig[position].inputType == 'select') {
-             inputResponse = jQuery(".form-html").find("select").val();
-             valid = inputResponse === '' ? false : true;
+            inputResponse = [];
+            jQuery(".form-html input[type='checkbox']:checked").each(function ()
+            {
+                inputResponse.push(jQuery(this).val());
+            });
+            valid = inputResponse === '' ? false : true;
          } else {
              inputResponse = jQuery(".form-html").find('input')[0].value;
              valid = inputResponse === '' ? false : true;
          }
          if(valid) {
-             jQuery('.validation-error').html('');
+             jQuery('.validation-error').html('&zwnj;');
              finalOutput[formConfig[position].inputName] = inputResponse;
+             console.log(finalOutput);
          } else {
              jQuery('.validation-error').html(msg);
          }
@@ -775,4 +891,4 @@ jQuery(document).ready(function() {
          }
          x[n].className += " active";
      }
- })
+}
